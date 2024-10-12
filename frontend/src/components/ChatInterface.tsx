@@ -52,11 +52,13 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onHistoryUpdate }) => {
     };
 
     return (
-        <div className="max-w-md mx-auto">
-            <div className="bg-white p-4 h-96 overflow-y-auto mb-4 rounded-lg shadow">
+        <div className="flex flex-col h-[calc(100vh-16rem)]">
+            <div className="flex-grow overflow-y-auto mb-4 p-4 bg-gray-50 rounded-lg shadow-inner">
                 {messages.map((msg, index) => (
-                    <div key={index} className={`mb-2 ${msg.isUser ? 'text-right' : 'text-left'}`}>
-                        <span className={`inline-block p-2 rounded-lg ${msg.isUser ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}>
+                    <div key={index} className={`mb-4 ${msg.isUser ? 'text-right' : 'text-left'}`}>
+                        <span className={`inline-block p-3 rounded-lg ${
+                            msg.isUser ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'
+                        }`}>
                             {msg.text}
                         </span>
                     </div>
@@ -68,10 +70,13 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onHistoryUpdate }) => {
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     onKeyPress={handleKeyPress}
-                    className="flex-grow border p-2 rounded-l"
+                    className="flex-grow p-3 rounded-l-lg border-2 border-gray-300 focus:outline-none focus:border-blue-500"
                     placeholder="메시지를 입력하세요..."
                 />
-                <button onClick={sendMessage} className="bg-blue-500 text-white p-2 rounded-r">
+                <button
+                    onClick={sendMessage}
+                    className="bg-blue-500 text-white p-3 rounded-r-lg hover:bg-blue-600 transition duration-200"
+                >
                     전송
                 </button>
             </div>

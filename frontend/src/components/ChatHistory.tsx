@@ -6,12 +6,14 @@ interface ChatHistoryProps {
 
 const ChatHistory: React.FC<ChatHistoryProps> = ({ history }) => {
     return (
-        <div className="bg-white shadow-md rounded-lg p-4 overflow-y-auto h-[calc(100vh-8rem)]">
-            <h2 className="text-lg font-semibold mb-4">대화 기록</h2>
-            <ul className="space-y-2">
+        <div className="bg-gray-50 rounded-lg p-4 overflow-y-auto h-[calc(100vh-12rem)] shadow-inner">
+            <ul className="space-y-3">
                 {history.map((message, index) => (
-                    <li key={index} className="text-sm">
-                        {message}
+                    <li key={index} className={`p-2 rounded-lg ${message.startsWith('User:') ? 'bg-blue-100' : 'bg-green-100'}`}>
+                        <span className={`font-semibold ${message.startsWith('User:') ? 'text-blue-600' : 'text-green-600'}`}>
+                            {message.split(':')[0]}:
+                        </span>
+                        <span className="ml-2 text-gray-700">{message.split(':')[1]}</span>
                     </li>
                 ))}
             </ul>
