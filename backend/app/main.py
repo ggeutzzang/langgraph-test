@@ -30,8 +30,8 @@ class State(TypedDict):
 
 # LangGraph 정의
 def chat_step(state: State) -> State:
-    # 이전 대화 히스토리 가져오기 (최대 4개)
-    history = state.get("history", [])[-4:]
+    # 이전 대화 히스토리 가져오기 (최대 3턴)
+    history = state.get("history", [])[-6:]
 
     # 시스템 메시지 생성
     system_message = SystemMessage(content=f"이전 대화 내용: {' '.join(history)}")

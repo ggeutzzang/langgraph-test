@@ -8,7 +8,8 @@ export default function Home() {
   const [history, setHistory] = useState<string[]>([]);
 
   const handleHistoryUpdate = (newHistory: string[]) => {
-    setHistory(newHistory);
+    // 최근 3개의 턴만 유지
+    setHistory(newHistory.slice(-6));
   };
 
   return (
