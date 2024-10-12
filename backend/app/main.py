@@ -89,7 +89,7 @@ def read_root():
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=["http://localhost:3000"],  # 프론트엔드 개발 서버 URL
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

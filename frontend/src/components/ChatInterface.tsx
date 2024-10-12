@@ -1,10 +1,12 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, KeyboardEvent } from 'react';
 
 interface ChatInterfaceProps {
     onHistoryUpdate: (history: string[]) => void;
 }
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
 const ChatInterface: React.FC<ChatInterfaceProps> = ({ onHistoryUpdate }) => {
     const [messages, setMessages] = useState<Array<{ text: string; isUser: boolean }>>([]);
@@ -17,13 +19,19 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onHistoryUpdate }) => {
         setMessages(newMessages);
         setInput('');
 
+        console.log('메시지 전송 시도:', input);
+
         try {
-            const response = await fetch('/api/chat', {
+            console.log('API 호출 시작');
+            const response = await fetch(`${API_URL}/api/chat`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ message: input }),
             });
+            console.log('API 응답 받음:', response.status);
             const data = await response.json();
+            console.log('API 응답 데이터:', data);
+
             const updatedMessages = [...newMessages, { text: data.response, isUser: false }];
             setMessages(updatedMessages);
 
@@ -33,7 +41,13 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onHistoryUpdate }) => {
             ];
             onHistoryUpdate(newHistory);
         } catch (error) {
-            console.error('Error sending message:', error);
+            console.error('메시지 전송 중 오류 발생:', error);
+        }
+    };
+
+    const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            sendMessage();
         }
     };
 
@@ -53,6 +67,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onHistoryUpdate }) => {
                     type="text"
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
+                    onKeyPress={handleKeyPress}
                     className="flex-grow border p-2 rounded-l"
                     placeholder="메시지를 입력하세요..."
                 />
