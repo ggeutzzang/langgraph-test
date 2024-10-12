@@ -5,6 +5,7 @@ frontend/node_modules
 frontend/.pnp
 frontend/.pnp.js
 frontend/.yarn/install-state.gz
+node_modules/
 
 # 테스트 커버리지
 frontend/coverage
@@ -39,3 +40,6 @@ backend/.env
 # backend 디렉토리 하위의 Python 캐시 및 컴파일된 파일 무시
 backend/**/__pycache__/
 backend/**/*.pyc
+
+# VS Code 설정 파일 무시
+.vscode/
