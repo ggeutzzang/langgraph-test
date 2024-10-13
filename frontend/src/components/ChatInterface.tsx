@@ -2,20 +2,27 @@
 
 import React, { useState, KeyboardEvent } from 'react';
 
+interface Message {
+    text: string;
+    timestamp: Date;
+    isUser: boolean;
+}
+
 interface ChatInterfaceProps {
-    onHistoryUpdate: (history: string[]) => void;
+    onHistoryUpdate: (history: Message[]) => void;
 }
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
 const ChatInterface: React.FC<ChatInterfaceProps> = ({ onHistoryUpdate }) => {
-    const [messages, setMessages] = useState<Array<{ text: string; isUser: boolean }>>([]);
+    const [messages, setMessages] = useState<Message[]>([]);
     const [input, setInput] = useState('');
 
     const sendMessage = async () => {
         if (!input.trim()) return;
 
-        const newMessages = [...messages, { text: input, isUser: true }];
+        const newMessage: Message = { text: input, timestamp: new Date(), isUser: true };
+        const newMessages = [...messages, newMessage];
         setMessages(newMessages);
         setInput('');
 
@@ -32,14 +39,12 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onHistoryUpdate }) => {
             const data = await response.json();
             console.log('API 응답 데이터:', data);
 
-            const updatedMessages = [...newMessages, { text: data.response, isUser: false }];
+            const aiMessage: Message = { text: data.response, timestamp: new Date(), isUser: false };
+            const updatedMessages = [...newMessages, aiMessage];
             setMessages(updatedMessages);
 
             // 대화 기록 업데이트
-            const newHistory = [
-                ...updatedMessages.map(msg => `${msg.isUser ? 'User' : 'AI'}: ${msg.text}`)
-            ];
-            onHistoryUpdate(newHistory);
+            onHistoryUpdate(updatedMessages);
         } catch (error) {
             console.error('메시지 전송 중 오류 발생:', error);
         }
@@ -56,11 +61,13 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onHistoryUpdate }) => {
             <div className="flex-grow overflow-y-auto mb-4 p-4 bg-gray-50 rounded-lg shadow-inner">
                 {messages.map((msg, index) => (
                     <div key={index} className={`mb-4 ${msg.isUser ? 'text-right' : 'text-left'}`}>
-                        <span className={`inline-block p-3 rounded-lg ${
-                            msg.isUser ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'
-                        }`}>
+                        <span className={`inline-block p-3 rounded-lg ${msg.isUser ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'
+                            }`}>
                             {msg.text}
                         </span>
+                        <div className="text-xs text-gray-500 mt-1">
+                            {msg.timestamp.toLocaleTimeString()}
+                        </div>
                     </div>
                 ))}
             </div>
